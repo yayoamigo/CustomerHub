@@ -1,3 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +10,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <!-- Add Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <a href="/leads">back</a>
-    <p>{{lead.first_name}}</p>
-    <p>{{lead.last_name}}</p></body></br>
-    <p>{{lead.age}}</p>
+<body class="bg-gray-100">
+    <div class="max-w-md mx-auto p-8">
+        <a href="/leads" class="text-blue-500 mb-4 inline-block">&lt; Back</a>
+        <p class="mb-4">{{ lead.first_name }}</p>
+        <p class="mb-4">{{ lead.last_name }}</p>
+        <p>{{ lead.age }}</p>
+    </div>
 </body>
 </html>
+
+{% endblock content %}
+```
