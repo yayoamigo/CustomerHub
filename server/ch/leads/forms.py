@@ -13,6 +13,7 @@ class LeadForm(forms.ModelForm):
             'last_name',
             'age',
             'agent',
+            'organization'
         )
 
 class CustomUserCreationForm(UserCreationForm):
