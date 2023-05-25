@@ -3,7 +3,7 @@ from django.core.mail import send_mail
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Lead
-from .forms import LeadForm, CustomUserCreationForm
+from .forms import LeadForm, CustomUserCreationForm, AssignAgentForm
 from agents.mixins import OrganisorAndLoginRequiredMixin
 
 class LandingPageView(generic.TemplateView):
@@ -32,6 +32,19 @@ class LeadListView(LoginRequiredMixin ,generic.ListView):
             
 
         return queryset
+    def get_context_data(self, **kwargs):
+        context = super(LeadListView, self).get_context_data(**kwargs)
+        user = self.request.user
+        if user.is_organizer:
+            queryset = Lead.objects.filter(
+                organization=user.userprofile, 
+                agent__isnull=True
+            )
+            context.update({
+                "unassigned_leads": queryset
+            })
+        return context
+
 
 class LeadDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = "leads/lead_detail.html"
@@ -44,9 +57,9 @@ class LeadDetailView(LoginRequiredMixin, generic.DetailView):
             queryset = Lead.objects.filter(organization=user.userprofile)
         else:
             queryset = Lead.objects.filter(organization=user.agent.organization )
-            print(queryset)
+            
             queryset = queryset.filter(agent__user=user)
-            print(queryset)
+            
 
         return queryset
 
@@ -87,3 +100,25 @@ class LeadDeleteView(OrganisorAndLoginRequiredMixin , generic.DeleteView):
     
     def get_success_url(self):
         return reverse("leads:lead-list")
+    
+
+class AssignAgentView(OrganisorAndLoginRequiredMixin, generic.FormView):
+    template_name = "leads/assign_agent.html"
+    form_class = AssignAgentForm
+
+    def get_form_kwargs(self, **kwargs):
+        kwargs = super(AssignAgentView, self).get_form_kwargs(**kwargs)
+        kwargs.update({
+            "request": self.request
+        })
+        return kwargs
+        
+    def get_success_url(self):
+        return reverse("leads:lead-list")
+
+    def form_valid(self, form):
+        agent = form.cleaned_data["agent"]
+        lead = Lead.objects.get(id=self.kwargs["pk"])
+        lead.agent = agent
+        lead.save()
+        return super(AssignAgentView, self).form_valid(form)
