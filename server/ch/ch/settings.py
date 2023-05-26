@@ -37,6 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # Third party apps
+    'crispy_forms',
+    "crispy_tailwind",
+    # Local apps
     'leads',
     'agents',
 ]
@@ -134,6 +139,6 @@ AUTH_USER_MODEL = 'leads.User'
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 LOGIN_REDIRECT_URL = "/leads"
 LOGIN_URL = "/login"
-AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend", # this line fixed my problem
-]
+LOGOUT_REDIRECT_URL = "/"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+CRISPY_TEMPLATE_PACK = 'tailwind'
