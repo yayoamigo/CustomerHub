@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UsernameField
 from django.contrib.auth import get_user_model
-from .models import Lead, Agent
+from .models import Lead, Agent, Category, FollowUp
 
 User = get_user_model()
 
@@ -13,8 +13,17 @@ class LeadForm(forms.ModelForm):
             'last_name',
             'age',
             'agent',
-            'organization'
+            'description',
+            'phone_number',
+            'email',
+            'profile_picture'
         )
+
+    def clean_first_name(self):
+        data = self.cleaned_data["first_name"]
+        # if data != "Joe":
+        #     raise ValidationError("Your name is not Joe")
+        return data
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
@@ -32,3 +41,27 @@ class AssignAgentForm(forms.Form):
         agents = Agent.objects.filter(organization=request.user.userprofile)
         super(AssignAgentForm, self).__init__(*args, **kwargs)
         self.fields["agent"].queryset = agents
+
+class LeadCategoryUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Lead
+        fields = (
+            'category',
+        )
+
+
+class CategoryModelForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = (
+            'name',
+        )
+
+
+class FollowUpModelForm(forms.ModelForm):
+    class Meta:
+        model = FollowUp
+        fields = (
+            'notes',
+            'file'
+        )
