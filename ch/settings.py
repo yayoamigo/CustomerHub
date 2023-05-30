@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-rh^s%^5&-wt30qbc6$njr!_s%e_5im+)l_w8a@ldjuq8!qy@_7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['o1ynnd5x95.execute-api.eu-west-1.amazonaws.com']
 
 
 # Application definition
@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Third party apps
-    'crispy_forms',
-    "crispy_tailwind",
+    'storages',
     # Local apps
     'leads',
     'agents',
@@ -82,8 +81,13 @@ WSGI_APPLICATION = 'ch.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': "customerHubDB",
+        'USER': 'adminCH',
+        'PASSWORD': 'Floria0991',
+        'HOST': 'customerhub.cf6tz22zp6bk.us-east-1.rds.amazonaws.com',
+        'PORT': '5432',
+        
     }
 }
 
@@ -122,11 +126,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / "static"
-]
-MEDIA_URL = '/media/'
+
+
+MEDIA_URL = 'https://customerbuckethub.s3.us-east-1.amazonaws.com/media/'
 MEDIA_ROOT = "media_root"
 STATIC_ROOT = "static_root"
 
@@ -142,3 +144,13 @@ LOGIN_URL = "/login"
 LOGOUT_REDIRECT_URL = "/"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = 'tailwind'
+AWS_STORAGE_BUCKET_NAME = 'customerbuckethub'
+AWS_SECRET_ACCESS_KEY = 'ePJVJycSl1JZK9JrsAoOcEXo6jKzh15KBFoVitHP'
+AWS_ACCESS_KEY_ID = 'AKIAZXNUR4KFR3AXR5SU'
+AWS_S3_CUSTOM_DOMAIN = 'http://customerbuckethub.s3.amazonaws.com/'
+
+STATIC_URL = 'https://customerbuckethub.s3.us-east-1.amazonaws.com/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static"
+]
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
